@@ -1,0 +1,47 @@
+import mongoose from 'mongoose'
+import { dbConfig } from '../common/dbConfig.mjs'
+import chalk from 'chalk'
+
+const userSchema = new mongoose.Schema(
+  {
+    name: { type: String },
+    email: { type: String, unique: true },
+    expirationField: { type: Date }
+  },
+  { timestamps: true }
+)
+
+userSchema.index({ expirationField: 1 }, { expireAfterSeconds: 30 })
+
+const User = mongoose.model('user', userSchema)
+
+async function run() {
+  try {
+    await mongoose.connect(dbConfig.uri, dbConfig.options)
+    console.log(chalk.magentaBright('Connected to the database'))
+
+    await User.collection.drop() // Видаляємо колекцію 'users'
+    await User.createIndexes() // Викликається один раз після оголошення схеми
+
+    try {
+      const newUser = await User.create({
+        name: 'John Doe',
+        email: 'john@example.com',
+        expirationField: new Date()
+      })
+      console.log(chalk.greenBright('User added to the database'), newUser)
+    } catch (error) {
+      console.log(chalk.bgRedBright('Error saving users:'), error.message)
+    }
+
+    const searchResult = await User.collection.find({}).toArray()
+    console.log(chalk.magentaBright('Search results:'), searchResult)
+
+    await mongoose.disconnect()
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error)
+    await mongoose.disconnect()
+  }
+}
+
+run()
