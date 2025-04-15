@@ -2,12 +2,18 @@ import mongoose from 'mongoose'
 import { dbConfig } from '../common/dbConfig.mjs'
 import chalk from 'chalk'
 
-const userSchema = new mongoose.Schema({
-  name: { type: String }
-})
-
-// ! Варіант 1 для створення індексу
-userSchema.index({ name: 'text' })
+const userSchema = new mongoose.Schema(
+  {
+    name: { type: String },
+    skills: [{ type: String }]
+  },
+  {
+    timestamps: {
+      createdAt: 'created',
+      updatedAt: false
+    }
+  }
+)
 
 const User = mongoose.model('user', userSchema)
 
@@ -18,15 +24,10 @@ async function run() {
 
     await User.collection.drop()
 
-    // Варіант 2 для створення індексу
-    // userSchema.index({ name: 'text' })
+    await User.create({ name: 'John Doe', skills: ['HTML'] })
 
-    await User.createCollection()
-    console.log(chalk.greenBright('Collection "users" created'))
-
-    await User.createIndexes()
-
-    await User.create({ name: 'John' })
+    let searchResult = await User.find()
+    console.log(chalk.magentaBright('Search results:'), searchResult)
 
     await mongoose.disconnect()
   } catch (error) {

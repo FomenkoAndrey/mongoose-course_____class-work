@@ -1,9 +1,15 @@
 import mongoose from 'mongoose'
 import { dbConfig } from '../common/dbConfig.mjs'
-import { User } from '../common/userSchema.mjs'
 import { users } from '../helpers/fakeUsers.mjs'
 import chalk from 'chalk'
 import { dropCollectionByName } from '../helpers/dropCollectionByName.mjs'
+
+const userSchema = new mongoose.Schema({
+  firstName: { type: String },
+  lastName: { type: String }
+})
+
+const User = mongoose.model('user', userSchema)
 
 async function run() {
   try {
@@ -13,17 +19,21 @@ async function run() {
     await dropCollectionByName('users')
 
     try {
-      await User.create(users)
+      await User.create([
+        { firstName: 'John', lastName: 'Smith' },
+        { firstName: 'Jane', lastName: 'Doe' }
+      ])
       console.log(chalk.greenBright('Users added to the database'))
 
-      const countBefore = await User.countDocuments()
-      console.log(chalk.black.bgGreenBright('Count before deletion:'), countBefore)
+      // ! замінюються всі поля, які вказані в об'єкті, окрім _id
+      const replaceResult = await User.replaceOne(
+        { firstName: 'John', lastName: 'Smith' },
+        { firstName: 'Alice', lastName: 'Johnson' }
+      )
+      console.log(chalk.black.bgBlueBright('Replace result:'), replaceResult)
 
-      const deletionResult = await User.deleteOne({ age: { $gt: 30 } })
-      console.log(chalk.blueBright('Documents deleted'), deletionResult)
-
-      const countAfter = await User.countDocuments()
-      console.log(chalk.black.bgRedBright('Count after deletion:'), countAfter)
+      const query = await User.find({})
+      console.log(chalk.magentaBright('Search results after replace:'), query)
     } catch (error) {
       console.log(chalk.black.bgRedBright('Error saving users:'), error.message)
     }

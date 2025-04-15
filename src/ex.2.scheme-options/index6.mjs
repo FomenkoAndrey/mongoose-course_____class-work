@@ -2,14 +2,9 @@ import mongoose from 'mongoose'
 import { dbConfig } from '../common/dbConfig.mjs'
 import chalk from 'chalk'
 
-const addressSchema = new mongoose.Schema({
-  street: { type: String },
-  city: { type: String }
-})
-
 const userSchema = new mongoose.Schema({
   name: { type: String },
-  address: addressSchema
+  skills: [{ type: String }]
 })
 
 const User = mongoose.model('user', userSchema)
@@ -21,17 +16,18 @@ async function run() {
 
     await User.collection.drop()
 
-    try {
-      const newUser = await User.create({
-        name: 'John Doe',
-        address: { street: '123 Main St', city: 'Anytown' }
-      })
-      console.log(chalk.greenBright('User added to the database'), newUser)
-    } catch (error) {
-      console.log(chalk.black.bgRedBright('Error saving users:'), error.message)
-    }
+    const user = await User.create({ name: 'John Doe', skills: ['HTML'] })
+    console.log(chalk.cyanBright('  Start skills, version:'), user.__v)
 
-    const searchResult = await User.collection.find({}).toArray()
+    user.skills.push('CSS')
+    await user.save()
+    console.log(chalk.yellowBright('Updated skills, version:'), user.__v)
+
+    user.skills.push('JavaScript')
+    await user.save()
+    console.log(chalk.blueBright('Updated skills, version:'), user.__v)
+
+    const searchResult = await User.find()
     console.log(chalk.magentaBright('Search results:'), searchResult)
 
     await mongoose.disconnect()

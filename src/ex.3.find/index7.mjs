@@ -13,19 +13,33 @@ async function run() {
     await dropCollectionByName('users')
 
     try {
-      await User.create(users)
+      await User.insertMany(users)
       console.log(chalk.greenBright('Users added to the database'))
 
-      const countBefore = await User.countDocuments()
-      console.log(chalk.black.bgGreenBright('Count before deletion:'), countBefore)
+      let query = await User.findOne(
+        {
+          $text: { $search: 'John' },
+          age: { $gt: 10, $lt: 90 }
+        },
+        {
+          '_id': 0,
+          'person.first': 1,
+          'person.last': 1,
+          'age': 1
+        }
+      )
+      console.log(chalk.redBright('Search results:'), query)
 
-      const deletionResult = await User.deleteOne({ age: { $gt: 30 } })
-      console.log(chalk.blueBright('Documents deleted'), deletionResult)
-
-      const countAfter = await User.countDocuments()
-      console.log(chalk.black.bgRedBright('Count after deletion:'), countAfter)
+      query = await User.findOne(
+        {
+          $text: { $search: 'John' },
+          age: { $gt: 20, $lt: 70 }
+        },
+        '-_id person.first person.last age'
+      )
+      console.log(chalk.redBright('Search results:'), query)
     } catch (error) {
-      console.log(chalk.black.bgRedBright('Error saving users:'), error.message)
+      console.log(chalk.bgRedBright('Error saving users:'), error.message)
     }
 
     await mongoose.disconnect()

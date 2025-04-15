@@ -13,19 +13,15 @@ async function run() {
     await dropCollectionByName('users')
 
     try {
-      await User.create(users)
-      console.log(chalk.black.greenBright('Users added to the database'))
+      await User.insertMany(users)
+      console.log(chalk.greenBright('Users added to the database'))
 
-      const countBefore = await User.countDocuments()
-      console.log(chalk.black.bgGreenBright('Count before deletion:'), countBefore)
-
-      const deletionResult = await User.deleteMany({ age: { $gt: 30 } })
-      console.log(chalk.blueBright('Documents deleted'), deletionResult)
-
-      const countAfter = await User.countDocuments()
-      console.log(chalk.black.bgRedBright('Count after deletion:'), countAfter)
+      const result = await User.findOne(
+        { $text: { $search: 'John' } }
+      ).exec()
+      console.log(chalk.redBright('Search results:'), result)
     } catch (error) {
-      console.log(chalk.black.bgRedBright('Error saving users:'), error.message)
+      console.log(chalk.bgRedBright('Error saving users:'), error.message)
     }
 
     await mongoose.disconnect()
@@ -36,3 +32,6 @@ async function run() {
 }
 
 run()
+
+// https://mongoosejs.com/docs/promises.html
+// Doc: "However, we recommend using .exec() because that gives you better stack traces."
