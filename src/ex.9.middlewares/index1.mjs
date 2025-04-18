@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
   }
 })
 
-userSchema.pre('save', async function (next) {
+userSchema.pre('save', async function(next) {
   if (this.isModified('password')) {
     const salt = await bcrypt.genSalt(10)
     this.password = await bcrypt.hash(this.password, salt)
@@ -43,7 +43,7 @@ async function run() {
       const user = query[0]
 
       const isMatch = await bcrypt.compare(passwordToCheck, user.password)
-      console.log(chalk.bgRedBright(`Does the password "${passwordToCheck}" match? ${isMatch}`))
+      console.log(chalk.black.bgRedBright(`Does the password "${passwordToCheck}" match? ${isMatch}`))
     } catch (error) {
       console.log(chalk.bgRedBright('Error saving users:'), error.message)
     }

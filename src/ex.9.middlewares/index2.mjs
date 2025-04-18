@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String }
 })
 
-userSchema.pre('save', async function (next) {
+userSchema.pre('save', async function(next) {
   console.log('Pre-save middleware called')
   if (this.isModified('password')) {
     const salt = await bcrypt.genSalt(10)
@@ -19,8 +19,8 @@ userSchema.pre('save', async function (next) {
   next()
 })
 
-userSchema.pre('find', async function (next) {
-  console.log('Pre-find middleware called')
+userSchema.pre('find', async function(next) {
+  console.log(chalk.red('Pre-find middleware called'))
   next()
 })
 
