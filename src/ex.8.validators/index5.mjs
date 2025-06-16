@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
   dateOfBirth: {
     type: Date,
     min: new Date(1970, 0, 1),
-    max: new Date(2024, 11, 31)
+    max: new Date(2025, 6, 15)
   }
 })
 
@@ -45,7 +45,7 @@ async function run() {
       const query = await User.find({})
       console.log(chalk.magentaBright('Search results:'), query)
     } catch (error) {
-      console.log(chalk.bgRedBright('Error saving users:'), error.message)
+      console.log(chalk.black.bgRedBright('Error saving users:'), error.message)
     }
 
     await mongoose.disconnect()

@@ -16,7 +16,7 @@ async function run() {
       await User.insertMany(users)
       console.log(chalk.greenBright('Users added to the database'))
 
-      // User.collection.find({}).toArray() - це власний метод MongoDB
+      // await User.collection.find({}).toArray() - це власний метод MongoDB
       const query = await User.find() // Це метод Mongoose
       console.log(chalk.redBright('Search results:'), query)
     } catch (error) {

@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String }
 })
 
-userSchema.pre('save', async function (next) {
+userSchema.pre('save', async function(next) {
   console.log('Pre-save middleware called')
   if (this.isModified('password')) {
     const salt = await bcrypt.genSalt(10)
@@ -19,12 +19,12 @@ userSchema.pre('save', async function (next) {
   next()
 })
 
-userSchema.pre('find', async function (next) {
+userSchema.pre('find', async function(next) {
   console.log('Pre-find middleware called')
   next()
 })
 
-userSchema.pre('findOne', async function (next) {
+userSchema.pre('findOne', async function(next) {
   console.log('Pre-findOne middleware called')
   next()
 })
@@ -49,7 +49,7 @@ async function run() {
       const user = await User.findOne({ name: 'John Smith' })
       console.log(chalk.magentaBright('Search result:'), user)
     } catch (error) {
-      console.log(chalk.bgRedBright('Error saving users:'), error.message)
+      console.log(chalk.black.bgRedBright('Error saving users:'), error.message)
     }
 
     await mongoose.disconnect()

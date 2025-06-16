@@ -19,7 +19,7 @@ async function run() {
       const count = await User.countDocuments()
       console.log(chalk.redBright('countDocuments:'), count)
     } catch (error) {
-      console.log(chalk.bgRedBright('Error saving users:'), error.message)
+      console.log(chalk.black.bgRedBright('Error saving users:'), error.message)
     }
 
     await mongoose.disconnect()

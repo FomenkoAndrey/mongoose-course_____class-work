@@ -25,7 +25,6 @@ async function run() {
       ])
       console.log(chalk.greenBright('Users added to the database'))
 
-      // ! замінюються всі поля, які вказані в об'єкті, окрім _id
       const replaceResult = await User.replaceOne(
         { firstName: 'John', lastName: 'Smith' },
         { firstName: 'Alice', lastName: 'Johnson' }

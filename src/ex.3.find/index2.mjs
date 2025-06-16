@@ -19,7 +19,7 @@ async function run() {
       const query = await User.find().limit(3)
       console.log(chalk.redBright('Search results:'), query)
     } catch (error) {
-      console.log(chalk.bgRedBright('Error saving users:'), error.message)
+      console.log(chalk.black.bgRedBright('Error saving users:'), error.message)
     }
 
     await mongoose.disconnect()

@@ -36,7 +36,7 @@ async function run() {
       })
       console.log(chalk.greenBright('User added to the database'), newUser2)
     } catch (error) {
-      console.log(chalk.bgRedBright('Error saving users:'), error.message)
+      console.log(chalk.black.bgRedBright('Error saving users:'), error.message)
     }
 
     const searchResult = await User.collection.find({}).toArray()

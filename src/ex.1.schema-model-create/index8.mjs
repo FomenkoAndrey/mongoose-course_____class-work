@@ -33,10 +33,10 @@ async function run() {
 
       console.log(chalk.yellowBright('Updated User:'), updatedUser)
 
-      console.log(chalk.bgRedBright('Numeric Field Comparison:'), updatedUser.numericField.toString() === '0.3')
-      console.log(chalk.bgGreenBright('Decimal Field Comparison:'), updatedUser.decimalField.toString() === '0.3')
+      console.log(chalk.black.bgRedBright('Numeric Field Comparison:'), updatedUser.numericField.toString() === '0.3')
+      console.log(chalk.black.bgGreenBright('Decimal Field Comparison:'), updatedUser.decimalField.toString() === '0.3')
     } catch (error) {
-      console.log(chalk.bgRedBright('Error saving users:'), error.message)
+      console.log(chalk.black.bgRedBright('Error saving users:'), error.message)
     }
 
     const searchResult = await User.collection.find({}).toArray()

@@ -23,10 +23,7 @@ async function run() {
         { $text: { $search: 'John Smith' } },
         {
           projection: {
-            person: 1, _id: 0, score: {
-              $meta: 't' +
-                'extScore'
-            }
+            person: 1, _id: 0, score: { $meta: 'textScore' }
           }
         })
       .sort({ score: { $meta: 'textScore' } })

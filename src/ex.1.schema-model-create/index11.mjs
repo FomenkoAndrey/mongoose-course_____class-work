@@ -46,7 +46,7 @@ async function run() {
         },
         { new: true }
       )
-      console.log(chalk.bgRedBright('Wrong update:'), updatedUser)
+      console.log(chalk.black.bgRedBright('Wrong update:'), updatedUser)
 
       updatedUser = await User.findByIdAndUpdate(
         newUser._id,
@@ -56,9 +56,9 @@ async function run() {
         },
         { new: true }
       )
-      console.log(chalk.bgGreenBright('Successful update:'), updatedUser)
+      console.log(chalk.black.bgGreenBright('Successful update:'), updatedUser)
     } catch (error) {
-      console.log(chalk.bgRedBright('Error saving users:'), error.message)
+      console.log(chalk.black.bgRedBright('Error saving users:'), error.message)
     }
 
     const searchResult = await User.collection.find({}).toArray()

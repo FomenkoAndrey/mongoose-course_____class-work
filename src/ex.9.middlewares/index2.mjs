@@ -45,9 +45,9 @@ async function run() {
       const user = query[0]
 
       const isMatch = await bcrypt.compare(passwordToCheck, user.password)
-      console.log(chalk.bgRedBright(`Does the password "${passwordToCheck}" match? ${isMatch}`))
+      console.log(chalk.black.bgRedBright(`Does the password "${passwordToCheck}" match? ${isMatch}`))
     } catch (error) {
-      console.log(chalk.bgRedBright('Error saving users:'), error.message)
+      console.log(chalk.black.bgRedBright('Error saving users:'), error.message)
     }
 
     await mongoose.disconnect()
