@@ -85,10 +85,9 @@ async function run() {
     } catch (error) {
       console.log(chalk.black.bgRedBright('Error saving users:'), error.message)
     }
-
-    await mongoose.disconnect()
   } catch (error) {
     console.error('Error connecting to MongoDB:', error)
+  } finally {
     await mongoose.disconnect()
   }
 }

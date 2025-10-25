@@ -10,7 +10,31 @@ async function run() {
     await mongoose.connect(dbConfig.uri, dbConfig.options)
     console.log(chalk.magentaBright('Connected to the database'))
 
-    await dropCollectionByName('users')
+    const collectionsToDrop = [
+      'users',
+      'customers',
+      'logs',
+      'neighborhoods',
+      'products',
+      'projects',
+      'renamedCustomers',
+      'restaurants',
+      'scores',
+      'sessions',
+      'streets',
+      'tasks',
+      'tempcodes'
+    ]
+
+    for (const name of collectionsToDrop) {
+      try {
+        await dropCollectionByName(name)
+        console.log(chalk.yellowBright(`Dropped collection: ${name}`))
+      } catch (err) {
+        // Если коллекция не существует или произошла ошибка — просто логируем и продолжаем
+        console.warn(chalk.redBright(`Failed to drop ${name}:`), err && err.message ? err.message : err)
+      }
+    }
 
     await User.insertMany(users)
     console.log(chalk.greenBright('Users added to the database'))
@@ -31,9 +55,9 @@ async function run() {
       .toArray()
     console.log(chalk.magentaBright('Search results:'), searchResult)
 
-    await mongoose.disconnect()
   } catch (error) {
     console.error('Error connecting to MongoDB:', error)
+  } finally {
     await mongoose.disconnect()
   }
 }

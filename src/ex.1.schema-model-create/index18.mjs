@@ -28,9 +28,9 @@ async function run() {
 
     await User.create({ name: 'John' })
 
-    await mongoose.disconnect()
   } catch (error) {
     console.error('Error connecting to MongoDB:', error)
+  } finally {
     await mongoose.disconnect()
   }
 }

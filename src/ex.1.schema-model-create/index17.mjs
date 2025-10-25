@@ -18,9 +18,9 @@ async function run() {
     await User.createCollection()
     console.log(chalk.greenBright('Collection "users" created'))
 
-    await mongoose.disconnect()
   } catch (error) {
     console.error('Error connecting to MongoDB:', error)
+  } finally {
     await mongoose.disconnect()
   }
 }

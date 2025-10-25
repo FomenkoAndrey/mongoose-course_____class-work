@@ -38,9 +38,9 @@ async function run() {
     searchResult = await User.collection.find({}).toArray()
     console.log(chalk.magentaBright('Search results after update:'), searchResult)
 
-    await mongoose.disconnect()
   } catch (error) {
     console.error('Error connecting to MongoDB:', error)
+  } finally {
     await mongoose.disconnect()
   }
 }
