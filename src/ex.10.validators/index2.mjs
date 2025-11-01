@@ -10,20 +10,6 @@ const userSchema = new mongoose.Schema({
     minlength: 3,
     maxlength: 15,
     match: /^[a-zA-Z\s?]+$/
-  },
-  sex: {
-    type: String,
-    enum: ['male', 'female']
-  },
-  age: {
-    type: Number,
-    min: 0,
-    max: 122
-  },
-  dateOfBirth: {
-    type: Date,
-    min: [new Date(1970, 0, 1), 'Дата народження не може бути раніше 1 січня 1970 року.'],
-    max: [new Date(2024, 11, 31), 'Дата народження не може бути пізніше 31 грудня 2024 року.']
   }
 })
 
@@ -37,15 +23,15 @@ async function run() {
     await dropCollectionByName('users')
 
     try {
-      await User.create({ name: 'John Smith', sex: 'male', age: 30, dateOfBirth: new Date('1995-01-01') })
-      await User.create({ name: 'Jane Doe', sex: 'female', age: 25, dateOfBirth: new Date('2050-01-01') })
+      await User.create({ name: 'John Smith' })
+      await User.create({ name: 'Jane 1 Doe' })
 
       console.log(chalk.greenBright('Users added to the database'))
-
-      const query = await User.find({})
-      console.log(chalk.magentaBright('Search results:'), query)
     } catch (error) {
       console.log(chalk.black.bgRedBright('Error saving users:'), error.message)
+    } finally {
+      const query = await User.find({})
+      console.log(chalk.magentaBright('Search results:'), query)
     }
   } catch (error) {
     console.error('Error connecting to MongoDB:', error)

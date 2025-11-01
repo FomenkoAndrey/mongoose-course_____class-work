@@ -16,6 +16,7 @@ async function run() {
     await User.collection.drop()
 
     await User.createCollection()
+
     console.log(chalk.greenBright('Collection "users" created'))
 
   } catch (error) {

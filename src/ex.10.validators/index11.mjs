@@ -11,14 +11,14 @@ const userSchema = new mongoose.Schema({
     maxlength: 15,
     match: /^[a-zA-Z\s?]+$/
   },
-  sex: {
+  gender: {
     type: String,
     enum: ['male', 'female']
   },
   age: {
     type: Number,
     required() {
-      return this.sex === 'male'
+      return this.gender === 'male'
     }
   }
 })
@@ -33,16 +33,16 @@ async function run() {
     await dropCollectionByName('users')
 
     try {
-      await User.create({ name: 'John Smith', sex: 'male', age: 30, dateOfBirth: new Date('1995-01-01') })
-      await User.create({ name: 'Jane Doe', sex: 'female' })
-      await User.create({ name: 'Bob Doe', sex: 'male' })
+      await User.create({ name: 'John Smith', gender: 'male', age: 30, dateOfBirth: new Date('1995-01-01') })
+      await User.create({ name: 'Jane Doe', gender: 'female' })
+      await User.create({ name: 'Bob Doe', gender: 'male' })
 
       console.log(chalk.greenBright('Users added to the database'))
-
-      const query = await User.find({})
-      console.log(chalk.magentaBright('Search results:'), query)
     } catch (error) {
       console.log(chalk.black.bgRedBright('Error saving users:'), error.message)
+    } finally {
+      const query = await User.find({})
+      console.log(chalk.magentaBright('Search results:'), query)
     }
 
   } catch (error) {

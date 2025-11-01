@@ -32,9 +32,7 @@ const userSchema = new mongoose.Schema({
           }, 3000)
         })
       },
-      message(props) {
-        console.log(props)
-        const { path, value } = props
+      message({ path, value }) {
         const formattedDate = value.toLocaleDateString('uk-UA', {
           day: '2-digit',
           month: '2-digit',
@@ -59,16 +57,15 @@ async function run() {
       await User.create({ name: 'John Smith', sex: 'male', age: 30, dateOfBirth: new Date('1995-01-01') })
 
       console.log(chalk.greenBright('Users added to the database'))
-
-      const query = await User.find({})
-      console.log(chalk.magentaBright('Search results:'), query)
     } catch (error) {
       console.log(chalk.black.bgRedBright('Error saving users:'), error.message)
+    } finally {
+      const query = await User.find({})
+      console.log(chalk.magentaBright('Search results:'), query)
     }
-
-    await mongoose.disconnect()
   } catch (error) {
     console.error('Error connecting to MongoDB:', error)
+  } finally {
     await mongoose.disconnect()
   }
 }

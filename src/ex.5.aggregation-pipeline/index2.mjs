@@ -1,18 +1,9 @@
 import mongoose from 'mongoose'
 import { dbConfig } from '../common/dbConfig.mjs'
+import { User } from '../common/userSchema.mjs'
 import { users } from '../helpers/fakeUsers.mjs'
 import chalk from 'chalk'
 import { dropCollectionByName } from '../helpers/dropCollectionByName.mjs'
-
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    minlength: 3,
-    maxlength: 15
-  }
-})
-
-const User = mongoose.model('user', userSchema)
 
 async function run() {
   try {
@@ -22,20 +13,21 @@ async function run() {
     await dropCollectionByName('users')
 
     try {
-      await User.create({ name: 'John Smith' })
-      await User.create({ name: 'Gadya Petrovich Doe' })
-
+      await User.insertMany(users)
       console.log(chalk.greenBright('Users added to the database'))
 
-      const query = await User.find({})
-      console.log(chalk.magentaBright('Search results:'), query)
+      const result = await User.aggregate([
+        { $match: { age: { $gt: 20 } } },
+        { $group: { _id: '$age', count: { $sum: 1 } } },
+        { $sort: { _id: 1 } }
+      ])
+      console.log(chalk.redBright('Users by age (sorted):'), result)
     } catch (error) {
-      console.log(chalk.black.bgRedBright('Error saving users:'), error.message)
+      console.log(chalk.bgRedBright('Error:'), error.message)
     }
-
-    await mongoose.disconnect()
   } catch (error) {
     console.error('Error connecting to MongoDB:', error)
+  } finally {
     await mongoose.disconnect()
   }
 }

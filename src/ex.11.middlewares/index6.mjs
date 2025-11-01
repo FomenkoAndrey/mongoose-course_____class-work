@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt'
 import { dropCollectionByName } from '../helpers/dropCollectionByName.mjs'
 
 const userSchema = new mongoose.Schema({
-  name: { type: String },
+  name: { type: String, required: true }, // Валідатор required: буде перевірятись автоматично перед збереженням
   password: { type: String }
 })
 
@@ -50,6 +50,8 @@ userSchema.post('findOneAndDelete', async function(doc, next) {
   next()
 })
 
+// Мідлвари validate спрацьовують ЗАВЖДИ перед збереженням (create, save),
+// навіть якщо в схемі немає жодних валідаторів (required, min, max тощо)
 userSchema.pre('validate', async function(next) {
   console.log('Pre-validate middleware called')
   next()

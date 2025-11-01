@@ -22,8 +22,12 @@ const userSchema = new mongoose.Schema({
   },
   dateOfBirth: {
     type: Date,
-    min: new Date(1970, 0, 1),
-    max: new Date(2025, 6, 15)
+    validate: {
+      validator(value) {
+        return value >= new Date(1970, 0, 1) && value <= new Date(2024, 11, 31)
+      },
+      message: 'Дата народження має бути в діапазоні від 1 січня 1970 року до 31 грудня 2024 року.'
+    }
   }
 })
 
@@ -41,16 +45,15 @@ async function run() {
       await User.create({ name: 'Jane Doe', sex: 'female', age: 25, dateOfBirth: new Date('2050-01-01') })
 
       console.log(chalk.greenBright('Users added to the database'))
-
-      const query = await User.find({})
-      console.log(chalk.magentaBright('Search results:'), query)
     } catch (error) {
       console.log(chalk.black.bgRedBright('Error saving users:'), error.message)
+    } finally {
+      const query = await User.find({})
+      console.log(chalk.magentaBright('Search results:'), query)
     }
-
-    await mongoose.disconnect()
   } catch (error) {
     console.error('Error connecting to MongoDB:', error)
+  } finally {
     await mongoose.disconnect()
   }
 }

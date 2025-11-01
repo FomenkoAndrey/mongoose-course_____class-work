@@ -13,16 +13,17 @@ async function run() {
     await dropCollectionByName('users')
 
     try {
-      // await User.insertMany(users)
-      await User.create(users)
+      await User.insertMany(users)
       console.log(chalk.greenBright('Users added to the database'))
+
+      const result = await User.aggregate([
+        { $match: { age: { $gt: 20 } } },
+        { $group: { _id: '$age', count: { $sum: 1 } } }
+      ])
+      console.log(chalk.redBright('Aggregation result:'), result)
     } catch (error) {
-      console.log(chalk.bgRedBright('Error saving users:'), error.message)
+      console.log(chalk.bgRedBright('Error:'), error.message)
     }
-
-    const searchResult = await User.collection.find({}).toArray()
-    console.log(chalk.magentaBright('Search results:'), searchResult)
-
   } catch (error) {
     console.error('Error connecting to MongoDB:', error)
   } finally {
